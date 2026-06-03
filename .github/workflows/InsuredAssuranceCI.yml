@@ -1,0 +1,26 @@
+name: CI with Jenkins Trigger
+
+on:
+  push:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Build with Maven
+        run: mvn clean install
+
+      - name: Trigger Jenkins
+        run: |
+          curl -X POST "http://13.204.158.179:8080/job/simple-java-maven/build?token=mytoken123"
